@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { Field, Form, Formik } from 'formik';
 
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory, Redirect } from 'react-router-dom';
 
 import {
   Box,
@@ -19,7 +19,7 @@ import {
   InputLeftElement,
   InputRightElement,
   Stack,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 import userStore from '../store/userStore';
 
@@ -32,10 +32,10 @@ const LoginPage = () => {
   const history = useHistory();
 
   if (user.authenticated) {
-    console.log(user);
+    // console.log(user);
     return (
       <Redirect to="/" />
-    )
+    );
   }
 
   const badgeRadius = 4;
@@ -46,14 +46,11 @@ const LoginPage = () => {
   }
 
   function handleSubmit(data) {
-    console.log(data);
     login(data)
-      .then((r) => {
-        console.log(r);
+      .then(() => {
         history.push('/');
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         history.push('/');
       });
   }
@@ -95,11 +92,11 @@ const LoginPage = () => {
           shadow="lg"
         >
           <Stack spacing={4}>
-              <Formik
-                initialValues={{ username: '', password: '' }}
-                onSubmit={handleSubmit}
-              >
-              {({ isSubmitting }) => (
+            <Formik
+              initialValues={{ username: '', password: '' }}
+              onSubmit={handleSubmit}
+            >
+              {() =>
                 <Form>
                   <Stack spacing={4}>
                     <FormControl isRequired>
@@ -108,13 +105,13 @@ const LoginPage = () => {
                           <Icon name="account" />
                         </InputLeftElement>
                         <Field type="text" name="username" placeholder="Username">
-                          {({ field, form }) => (
+                          {({ field, form }) =>
                             <FormControl isInvalid={form.errors.name && form.touched.name}>
                               <FormLabel htmlFor="name">Username</FormLabel>
                               <Input {...field} id="username" placeholder="Username" />
                               <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                             </FormControl>
-                          )}
+                          }
                         </Field>
                       </InputGroup>
                     </FormControl>
@@ -124,21 +121,21 @@ const LoginPage = () => {
                           <Icon name="lock" />
                         </InputLeftElement>
                         <Field name="password" placeholder="password">
-                          {({ field, form }) => (
+                          {({ field, form }) =>
                             <FormControl isInvalid={form.errors.name && form.touched.name}>
                               <FormLabel htmlFor="name">Password</FormLabel>
-                              <Input {...field} type={showPass ? "text" : "password"} id="password" placeholder="password" />
+                              <Input {...field} type={showPass ? 'text' : 'password'} id="password" placeholder="password" />
                               <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                             </FormControl>
-                          )}
+                          }
                         </Field>
                         <InputRightElement>
                           <IconButton
-                            icon={showPass ? "hide" : "show"}
+                            icon={showPass ? 'hide' : 'show'}
                             variant="ghost"
                             size="sm"
                             onClick={handleToggle}
-                            title={`${showPass ? "Hide" : "Show"} Password`}
+                            title={`${showPass ? 'Hide' : 'Show'} Password`}
                           />
                         </InputRightElement>
                       </InputGroup>
@@ -146,16 +143,16 @@ const LoginPage = () => {
                     <Divider />
                     <Button disabled={false} variantColor="blue" type="submit" shadow="md">
                       Login
-                      </Button>
+                    </Button>
                   </Stack>
                 </Form>
-                )}
+              }
             </Formik>
           </Stack>
         </Box>
       </Flex>
     </div>
   );
-}
+};
 
 export default LoginPage;

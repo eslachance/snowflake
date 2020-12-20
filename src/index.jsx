@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ChakraProvider } from "@chakra-ui/react"
+import { ChakraProvider } from '@chakra-ui/react';
 
 import App from './App.jsx';
 
 import userStore from './store/userStore';
-const { me, setUser} = userStore.getState();
+const { me, setUser } = userStore.getState();
 me().then(user => {
-  console.log("USER HERE, USER HAS CHANGED")
-  console.log(user)
-  if(user && user.isAuthenticated) {
+  // console.log('USER HERE, USER HAS CHANGED');
+  // console.log(user);
+  if (user && user.isAuthenticated) {
     setUser(user);
   } else {
     // logout();

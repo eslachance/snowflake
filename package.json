@@ -2,6 +2,7 @@
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
+    "lint": "eslint src --ext .js --ext .jsx --fix",
     "test": "echo \"This template does not include a test runner by default.\" && exit 1"
   },
   "proxy": "http://localhost:3000",

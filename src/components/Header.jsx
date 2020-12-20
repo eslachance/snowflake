@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Box,
@@ -6,27 +6,27 @@ import {
   Flex,
   Heading,
   Text,
-} from "@chakra-ui/react";
-import { FaKey } from "react-icons/fa";
+} from '@chakra-ui/react';
+import { FaKey } from 'react-icons/fa';
 
 import userStore from '../store/userStore';
 
-const MenuItems = ({ children }) => (
+const MenuItems = ({ children }) =>
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
     {children}
   </Text>
-);
+;
 
-const Header = (props) => {
+const Header = () => {
   const location = useLocation();
   const [show, setShow] = useState(false);
   const handleToggle = () => setShow(!show);
 
-  const user = userStore(state => state.userData) // state => state.nuts
-  console.log(user)
+  const user = userStore(state => state.userData); // state => state.nuts
+  // console.log(user);
 
-  if(location.pathname.startsWith('/door/')) {
-    return (<div></div>)
+  if (location.pathname.startsWith('/door/')) {
+    return <div></div>;
   }
 
   return (
@@ -40,12 +40,12 @@ const Header = (props) => {
       color="white"
     >
       <Flex align="center" mr={5}>
-        <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
+        <Heading as="h1" size="lg" letterSpacing={'-.1rem'}>
           BLOG
         </Heading>
       </Flex>
 
-      <Box display={{ base: "block", md: "none" }} onClick={handleToggle}>
+      <Box display={{ base: 'block', md: 'none' }} onClick={handleToggle}>
         <svg
           fill="white"
           width="12px"
@@ -58,8 +58,8 @@ const Header = (props) => {
       </Box>
 
       <Box
-        display={{ sm: show ? "block" : "none", md: "flex" }}
-        width={{ sm: "full", md: "auto" }}
+        display={{ sm: show ? 'block' : 'none', md: 'flex' }}
+        width={{ sm: 'full', md: 'auto' }}
         alignItems="center"
         flexGrow={1}
       >
@@ -69,19 +69,19 @@ const Header = (props) => {
       </Box>
 
       <Box
-        display={{ sm: show ? "block" : "none", md: "block" }}
+        display={{ sm: show ? 'block' : 'none', md: 'block' }}
         mt={{ base: 4, md: 0 }}
       >
-        {(!user || !user.authenticated) && (
+        {(!user || !user.authenticated) &&
           <Button as={Link} to="/login" leftIcon={<FaKey />} bg="transparent" border="1px">
             Login
           </Button>
-        )}
+        }
       </Box>
-      {user && user.authenticated && (
+      {user && user.authenticated &&
         <>
           <Box
-            display={{ sm: show ? "block" : "none", md: "block" }}
+            display={{ sm: show ? 'block' : 'none', md: 'block' }}
             mt={{ base: 4, md: 0 }}
           >
             <Button as={Link} to="/api/logout" bg="transparent" border="1px">
@@ -89,7 +89,7 @@ const Header = (props) => {
             </Button>
           </Box>
         </>
-      )}
+      }
     </Flex>
   );
 };

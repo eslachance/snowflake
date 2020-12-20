@@ -33,7 +33,7 @@
 		"dot-location": ["error", "property"],
 		"dot-notation": "error",
 		"eqeqeq": "off",
-		"no-console": ["error", { "allow": ["warn", "error"] }],
+		"no-console": ["off", { "allow": ["warn", "error"] }],
 		"no-multi-spaces": "error",
 		"callback-return": "error",
 		"handle-callback-err": "error",
@@ -103,6 +103,7 @@
 		"prefer-spread": "error",
 		"prefer-template": "error",
 		"rest-spread-spacing": "error",
-		"template-curly-spacing": "error"
+		"template-curly-spacing": "error",
+		"react/prop-types": "off"
 	}
 }

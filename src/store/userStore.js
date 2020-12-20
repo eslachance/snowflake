@@ -18,13 +18,13 @@ const userStore = create(devtools(set => ({
     isAdmin: false,
   },
 
-  login: async ({username, password}) => {
+  login: async ({ username, password }) => {
     const res = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({username, password}),
+      body: JSON.stringify({ username, password }),
     }).then(handleResponse);
 
     if (res) {
@@ -48,7 +48,7 @@ const userStore = create(devtools(set => ({
   setUser: (userData) => set({ userData }),
 
   me: async () => {
-    const userData = await fetch(`${BASE_URL  }/me`).then(handleResponse);
+    const userData = await fetch(`${BASE_URL}/me`).then(handleResponse);
     if (userData) {
       console.log(userData);
       set({ userData });
