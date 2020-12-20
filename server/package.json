@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.27.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "enmap": "^5.8.2",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "nedb-session-store": "^1.1.2"
+  }
+}
