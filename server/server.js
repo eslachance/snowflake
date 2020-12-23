@@ -60,11 +60,11 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
   res.send('ok');
 });
 
-app.get('/users', isAdmin, (req, res) => {
+app.get('/api/users', isAdmin, (req, res) => {
   const residenceid = req.query.residence;
   let userData = new Enmap(users.entries());
 
@@ -77,7 +77,7 @@ app.get('/users', isAdmin, (req, res) => {
   res.json(userData.array().map(u => ({ ...u, id: u.username })));
 });
 
-app.get('/users/:id', isAdmin, (req, res) => {
+app.get('/api/users/:id', isAdmin, (req, res) => {
   const { id } = req.params;
   console.log('Requesting user ID: ', id);
   if (!id || !users.has(id)) {
@@ -90,7 +90,7 @@ app.get('/users/:id', isAdmin, (req, res) => {
   res.json(user);
 });
 
-app.post('/users', isAdmin, (req, res) => {
+app.post('/api/users', isAdmin, (req, res) => {
   newUser({
     ...req.body,
     plainpw: req.body.password,
@@ -99,11 +99,11 @@ app.post('/users', isAdmin, (req, res) => {
 });
 
 // eslint-disable-next-line no-unused-vars
-app.patch('/users', isAdmin, (req, res) => {
+app.patch('/api/users', isAdmin, (req, res) => {
   // add udpate code
 });
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   if (!req.body.username || !req.body.password) res.status(400).send('Missing Username or Password');
   if (await login(req.body.username, req.body.password)) {
     const user = users.get(req.body.username);
@@ -124,7 +124,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/me', async (req, res) => {
+app.get('/api/me', async (req, res) => {
   console.log('Request for user data', req.session);
 
   if (!req.session || !req.session.logged) {
@@ -143,10 +143,16 @@ app.get('/me', async (req, res) => {
   });
 });
 
-app.get('/logout', isAuthenticated, (req, res) => {
+app.get('/api/logout', isAuthenticated, (req, res) => {
+  console.log('Loggin out...');
   req.session.destroy((err) => {
     if (err) console.log(`Error destroying session: ${err}`);
-    res.redirect('/');
+    console.log('Logged out');
+    return res.json({
+      authenticated: false,
+      username: null,
+      isAdmin: false,
+    });
   });
 });
 

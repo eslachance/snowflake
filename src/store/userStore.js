@@ -1,18 +1,10 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
-
-const BASE_URL = 'http://localhost:3000';
-
-const handleResponse = async r => {
-  const resdata = await r.json();
-  if (r.status !== 200) {
-    throw new Error(resdata);
-  }
-  return resdata;
-};
+import { BASE_URL, handleResponse } from './tools';
 
 const userStore = create(devtools(set => ({
   userData: {
+    loaded: false,
     authenticated: false,
     username: null,
     isAdmin: false,
@@ -35,7 +27,7 @@ const userStore = create(devtools(set => ({
   },
 
   logout: async () => {
-    const res = await fetch(`${BASE_URL}/logout`, { method: 'POST' }).then(handleResponse);
+    const res = await fetch(`${BASE_URL}/logout`).then(handleResponse);
     console.log(res);
 
     set({ userData: {

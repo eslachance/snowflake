@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Text,
 } from '@chakra-ui/react';
-import { FaKey } from 'react-icons/fa';
+// import { FaKey } from 'react-icons/fa';
 
 import userStore from '../store/userStore';
 
@@ -18,16 +17,19 @@ const MenuItems = ({ children }) =>
 ;
 
 const Header = () => {
-  const location = useLocation();
+  const history = useHistory();
   const [show, setShow] = useState(false);
   const handleToggle = () => setShow(!show);
 
   const user = userStore(state => state.userData); // state => state.nuts
-  // console.log(user);
+  const logout = userStore(state => state.logout);
+  console.log(user);
 
-  if (location.pathname.startsWith('/door/')) {
-    return <div></div>;
-  }
+  const handleLogout = () => {
+    logout().then(() => {
+      history.push('/');
+    });
+  };
 
   return (
     <Flex
@@ -41,7 +43,7 @@ const Header = () => {
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg" letterSpacing={'-.1rem'}>
-          BLOG
+          Snowflake
         </Heading>
       </Flex>
 
@@ -59,37 +61,27 @@ const Header = () => {
 
       <Box
         display={{ sm: show ? 'block' : 'none', md: 'flex' }}
-        width={{ sm: 'full', md: 'auto' }}
-        alignItems="center"
-        flexGrow={1}
-      >
-        <MenuItems><Link to="/unit">Units</Link></MenuItems>
-        <MenuItems><Link to="/packages">Packages</Link></MenuItems>
-        <MenuItems><Link to="/users">Users</Link></MenuItems>
-      </Box>
-
-      <Box
-        display={{ sm: show ? 'block' : 'none', md: 'block' }}
         mt={{ base: 4, md: 0 }}
+        alignItems="flex-end"
       >
+        {user && user.authenticated &&
+          <>
+            <MenuItems><a onClick={handleLogout} href="">Logout</a></MenuItems>
+            {user.isAdmin &&
+              <>
+                <MenuItems><Link to="/admin">Admin</Link></MenuItems>
+              </>
+            }
+            <MenuItems><Link to="/profile"><b>{user.username}</b></Link></MenuItems>
+          </>
+        }
         {(!user || !user.authenticated) &&
-          <Button as={Link} to="/login" leftIcon={<FaKey />} bg="transparent" border="1px">
-            Login
-          </Button>
+          <>
+            <MenuItems><Link to="/register">Register</Link></MenuItems>
+            <MenuItems><Link to="/login">Login</Link></MenuItems>
+          </>
         }
       </Box>
-      {user && user.authenticated &&
-        <>
-          <Box
-            display={{ sm: show ? 'block' : 'none', md: 'block' }}
-            mt={{ base: 4, md: 0 }}
-          >
-            <Button as={Link} to="/api/logout" bg="transparent" border="1px">
-              Logout
-            </Button>
-          </Box>
-        </>
-      }
     </Flex>
   );
 };

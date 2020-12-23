@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Field, Form, Formik } from 'formik';
 
 import { useHistory, Redirect } from 'react-router-dom';
@@ -12,27 +12,23 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Icon,
-  IconButton,
   Input,
   InputGroup,
-  InputLeftElement,
-  InputRightElement,
   Stack,
 } from '@chakra-ui/react';
 
 import userStore from '../store/userStore';
+import postStore from '../store/postStore';
 
 import Jumbotron from '../components/Jumbotron.js';
 
 const LoginPage = () => {
-  const [showPass, setShowPass] = useState(false);
   const user = userStore(state => state.userData);
-  const login = userStore(state => state.login);
+  const { newPost } = postStore();
   const history = useHistory();
 
-  if (user.authenticated) {
-    // console.log(user);
+  if (user && !user.authenticated) {
+    console.log(user);
     return (
       <Redirect to="/" />
     );
@@ -40,13 +36,8 @@ const LoginPage = () => {
 
   const badgeRadius = 4;
 
-  function handleToggle(e) {
-    e.preventDefault();
-    setShowPass(!showPass);
-  }
-
   function handleSubmit(data) {
-    login(data)
+    newPost(data)
       .then(() => {
         history.push('/');
       })
@@ -58,7 +49,7 @@ const LoginPage = () => {
   return (
     <div styles={{ position: 'relative' }}>
       <CSSReset />
-      <Jumbotron title="Identification" subtext="Now who the heck might you be, stranger?" />
+      <Jumbotron title="New Blog Post" subtext="A penny for your thoughts" />
       <Flex
         // position="absolute"
         left={0}
@@ -69,21 +60,6 @@ const LoginPage = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          size={`${badgeRadius * 2}em`}
-          borderRadius="50%"
-          mb={`-${badgeRadius}em`}
-          shadow="sm"
-          zIndex="docked"
-        >
-          <Icon
-            name="WarningIcon"
-            size={`${badgeRadius + 1}em`}
-            mt={`${badgeRadius / 6}em`}
-          />
-        </Flex>
         <Box
           w="sm"
           p={4}
@@ -93,7 +69,7 @@ const LoginPage = () => {
         >
           <Stack spacing={4}>
             <Formik
-              initialValues={{ username: '', password: '' }}
+              initialValues={{ title: '', content: '' }}
               onSubmit={handleSubmit}
             >
               {() =>
@@ -101,14 +77,11 @@ const LoginPage = () => {
                   <Stack spacing={4}>
                     <FormControl isRequired>
                       <InputGroup>
-                        <InputLeftElement>
-                          <Icon name="account" />
-                        </InputLeftElement>
-                        <Field type="text" name="username" placeholder="Username">
+                        <Field type="text" name="title" placeholder="title">
                           {({ field, form }) =>
                             <FormControl isInvalid={form.errors.name && form.touched.name}>
-                              <FormLabel htmlFor="name">Username</FormLabel>
-                              <Input {...field} id="username" placeholder="Username" />
+                              <FormLabel htmlFor="name">Post Title</FormLabel>
+                              <Input {...field} id="title" placeholder="title" />
                               <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                             </FormControl>
                           }
@@ -117,27 +90,15 @@ const LoginPage = () => {
                     </FormControl>
                     <FormControl isRequired>
                       <InputGroup>
-                        <InputLeftElement>
-                          <Icon name="lock" />
-                        </InputLeftElement>
-                        <Field name="password" placeholder="password">
+                        <Field component="textarea" name="content" placeholder="content">
                           {({ field, form }) =>
                             <FormControl isInvalid={form.errors.name && form.touched.name}>
-                              <FormLabel htmlFor="name">Password</FormLabel>
-                              <Input {...field} type={showPass ? 'text' : 'password'} id="password" placeholder="password" />
+                              <FormLabel htmlFor="name">content</FormLabel>
+                              <textarea {...field} id="content" placeholder="content"></textarea>
                               <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                             </FormControl>
                           }
                         </Field>
-                        <InputRightElement>
-                          <IconButton
-                            icon={showPass ? 'hide' : 'show'}
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleToggle}
-                            title={`${showPass ? 'Hide' : 'Show'} Password`}
-                          />
-                        </InputRightElement>
                       </InputGroup>
                     </FormControl>
                     <Divider />

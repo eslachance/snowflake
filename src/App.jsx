@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Header from './components/Header.js';
-import Login from './pages/Login.js';
-
-const Home = () => <h1>HOME</h1>;
+import Header from './components/Header';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import NewPost from './pages/NewPost'
 
 function App(props) {
   return (
@@ -14,6 +14,7 @@ function App(props) {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/new" component={NewPost} />
       </Switch>
     </div>
   );
