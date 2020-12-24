@@ -21,6 +21,6 @@
   "plugins": ["react"],
   "rules": {
     "react/prop-types": 0,
-    "no-unused-vars": "local"
+    "no-unused-vars": 1
   }
 }
