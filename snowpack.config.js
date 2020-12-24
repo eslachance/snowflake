@@ -12,7 +12,7 @@ module.exports = {
     NODE_ENV: true,
   },
   devOptions: {
-    /* ... */
+    open: 'none',
   },
   buildOptions: {
     /* ... */
