@@ -22,10 +22,12 @@ const login = async (username, password) => {
 };
 
 const newUser = async (data) => {
-  if (users.has(data.username)) throw new Error(`User ${data.username} already exists!`);
+  if (users.has(data.username))
+    throw new Error(`User ${data.username} already exists!`);
   // console.log(data);
   const score = scorePassword(data.plainpw);
-  if (score < 30) throw new Error('Your password is too weak, and cannot be used.');
+  if (score < 30)
+    throw new Error('Your password is too weak, and cannot be used.');
   const hash = await argon2.hash(data.plainpw);
   delete data.plainpw;
   users.set(data.username, {

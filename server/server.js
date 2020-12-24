@@ -18,9 +18,11 @@ const Enmap = require('enmap');
 
 const app = express();
 app.use(express.json());
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 app.use(bodyParser.json());
 
 app.use(cors());
@@ -71,10 +73,10 @@ app.get('/api/users', isAdmin, (req, res) => {
   // console.log('user filtering: ', residenceid);
 
   if (residenceid) {
-    userData = userData.filter(user => user.residence === residenceid);
+    userData = userData.filter((user) => user.residence === residenceid);
   }
   // still contains password, should be filtered out (duh)
-  res.json(userData.array().map(u => ({ ...u, id: u.username })));
+  res.json(userData.array().map((u) => ({ ...u, id: u.username })));
 });
 
 app.get('/api/users/:id', isAdmin, (req, res) => {
@@ -104,7 +106,8 @@ app.patch('/api/users', isAdmin, (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-  if (!req.body.username || !req.body.password) res.status(400).send('Missing Username or Password');
+  if (!req.body.username || !req.body.password)
+    res.status(400).send('Missing Username or Password');
   if (await login(req.body.username, req.body.password)) {
     const user = users.get(req.body.username);
     req.session.logged = true;
@@ -157,5 +160,7 @@ app.get('/api/logout', isAuthenticated, (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(`Example app listening at http://localhost:${process.env.PORT || 3000}`);
+  console.log(
+    `Example app listening at http://localhost:${process.env.PORT || 3000}`,
+  );
 });
