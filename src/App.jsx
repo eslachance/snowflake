@@ -9,7 +9,6 @@ import Home from './pages/Home';
 
 function App(props) {
   return (
-
     <div className="App">
       <Header {...props} />
       <section className="text-gray-500 body-font">

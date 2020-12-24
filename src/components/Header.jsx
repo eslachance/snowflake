@@ -6,8 +6,8 @@ import userStore from '../store/userStore';
 const Header = () => {
   const history = useHistory();
 
-  const user = userStore(state => state.userData); // state => state.nuts
-  const logout = userStore(state => state.logout);
+  const user = userStore((state) => state.userData); // state => state.nuts
+  const logout = userStore((state) => state.logout);
   console.log(user);
 
   const handleLogout = () => {

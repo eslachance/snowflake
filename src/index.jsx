@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import 'tailwindcss/dist/tailwind.css';
+import './style.css';
 
 import App from './App.jsx';
 
 import userStore from './store/userStore';
 const { me, setUser } = userStore.getState();
-me().then(user => {
+me().then((user) => {
   // console.log('USER HERE, USER HAS CHANGED');
   // console.log(user);
   if (user?.isLoaded) {
