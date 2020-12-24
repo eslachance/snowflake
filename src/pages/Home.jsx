@@ -2,6 +2,7 @@ import React from 'react';
 
 import Jumbotron from '../components/Jumbotron.js';
 import postStore from '../store/postStore';
+const test = 4;
 
 const SinglePost = (props) => {
   const { author, date, title, content } = props;
