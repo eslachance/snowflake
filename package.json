@@ -25,9 +25,21 @@
   },
   "devDependencies": {
     "eslint": "^7.16.0",
-    "eslint-config-standard": "^16.0.2",
+    "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
     "snowpack": "^2.18.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged --quiet"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
+    "*.{js,css,ts,tsx,md}": "prettier --write"
   }
 }
