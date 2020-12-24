@@ -5,13 +5,13 @@ module.exports = {
     src: '/dist',
   },
   plugins: [
-    /* ... */
+    '@snowpack/plugin-postcss',
   ],
   install: [
     /* ... */
   ],
   installOptions: {
-    NODE_ENV: true
+    NODE_ENV: true,
   },
   devOptions: {
     /* ... */

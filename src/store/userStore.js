@@ -22,7 +22,7 @@ const userStore = create(devtools(set => ({
     if (res) {
       const userData = await fetch(`${BASE_URL}/me`).then(handleResponse);
       console.log(userData);
-      set({ userData });
+      set({ userData, loaded: true });
     }
   },
 
@@ -34,6 +34,7 @@ const userStore = create(devtools(set => ({
       authenticated: false,
       username: null,
       isAdmin: false,
+      loaded: true,
     } });
   },
 
@@ -43,7 +44,7 @@ const userStore = create(devtools(set => ({
     const userData = await fetch(`${BASE_URL}/me`).then(handleResponse);
     if (userData) {
       console.log(userData);
-      set({ userData });
+      set({ userData, loaded: true });
     }
   },
 
