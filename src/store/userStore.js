@@ -5,9 +5,6 @@ import { BASE_URL, handleResponse } from './tools';
 const userStore = create(devtools(set => ({
   userData: {
     loaded: false,
-    authenticated: false,
-    username: null,
-    isAdmin: false,
   },
 
   login: async ({ username, password }) => {

@@ -1,19 +1,16 @@
-// import React from 'react';
-// import { Box, Heading, Button } from '@chakra-ui/react';
-// import { Link } from 'react-router-dom';
-// // import styled from 'styled-components';
+import React from 'react';
+import { Link } from 'react-router-dom';
+// import styled from 'styled-components';
 
-// const Jumbotron = (props) => {
-//   const { title, subtext, action, actionLink } = props;
-//   return (
-//     <Box w="100%" p={0} centerContent>
-//       <Box padding={4} bg="gray.100" w="100%">
-//         <Heading as="h2" size="xl">{title}</Heading>
-//         {subtext && <Heading as="h3" size="l">{subtext}</Heading>}
-//         {action && <Button colorScheme="blue" as={Link} to={actionLink}>{action}</Button>}
-//       </Box>
-//     </Box>
-//   );
-// };
+const Jumbotron = (props) => {
+  const { title, subtext, action, actionLink } = props;
+  return (
+    <div className="flex flex-col bg-gray-900 text-center w-full mb-20 py-10">
+      <h1 className="text-4xl font-large title-font mb-4 text-white tracking-widest">{title}</h1>
+      {subtext && <p className="lg:w-2/3 mx-auto leading-relaxed text-base">{subtext}</p>}
+      {action && <button as={Link} to={actionLink}>{action}</button>}
+    </div>
+  );
+};
 
-// export default Jumbotron;
+export default Jumbotron;

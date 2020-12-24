@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import 'tailwindcss/dist/tailwind.css';
 
 import App from './App.jsx';
 
@@ -9,7 +10,7 @@ const { me, setUser } = userStore.getState();
 me().then(user => {
   // console.log('USER HERE, USER HAS CHANGED');
   // console.log(user);
-  if (user && user.isAuthenticated) {
+  if (user?.isLoaded) {
     setUser(user);
   } else {
     // logout();
