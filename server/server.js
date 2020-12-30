@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-const { users, login, newUser } = require('./db.js');
+const { users, login, newUser, posts, newPost } = require('./db.js');
 const Enmap = require('enmap');
 
 // const convertEntriesToObject = (entries) => {
@@ -62,11 +62,11 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-app.get('/api/', (req, res) => {
+app.get('/', (req, res) => {
   res.send('ok');
 });
 
-app.get('/api/users', isAdmin, (req, res) => {
+app.get('/users', isAdmin, (req, res) => {
   const residenceid = req.query.residence;
   let userData = new Enmap(users.entries());
 
@@ -79,7 +79,7 @@ app.get('/api/users', isAdmin, (req, res) => {
   res.json(userData.array().map((u) => ({ ...u, id: u.username })));
 });
 
-app.get('/api/users/:id', isAdmin, (req, res) => {
+app.get('/users/:id', isAdmin, (req, res) => {
   const { id } = req.params;
   console.log('Requesting user ID: ', id);
   if (!id || !users.has(id)) {
@@ -92,7 +92,7 @@ app.get('/api/users/:id', isAdmin, (req, res) => {
   res.json(user);
 });
 
-app.post('/api/users', isAdmin, (req, res) => {
+app.post('/users', isAdmin, (req, res) => {
   newUser({
     ...req.body,
     plainpw: req.body.password,
@@ -101,11 +101,11 @@ app.post('/api/users', isAdmin, (req, res) => {
 });
 
 // eslint-disable-next-line no-unused-vars
-app.patch('/api/users', isAdmin, (req, res) => {
+app.patch('/users', isAdmin, (req, res) => {
   // add udpate code
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   if (!req.body.username || !req.body.password)
     res.status(400).send('Missing Username or Password');
   if (await login(req.body.username, req.body.password)) {
@@ -127,7 +127,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.get('/api/me', async (req, res) => {
+app.get('/me', async (req, res) => {
   console.log('Request for user data', req.session);
 
   if (!req.session || !req.session.logged) {
@@ -146,7 +146,26 @@ app.get('/api/me', async (req, res) => {
   });
 });
 
-app.get('/api/logout', isAuthenticated, (req, res) => {
+app.post('/post', isAuthenticated, (req, res) => {
+  console.log('Creating new blog post...', req.body);
+  if (!req?.body?.content || !req?.body?.title) {
+    return res.status(400).json({
+      error: true,
+      message: 'Missing post data',
+    });
+  }
+  const result = newPost(req.body);
+
+  res.json(result);
+});
+
+app.get('/posts', (req, res) => {
+  console.log('Getting all blog posts');
+  const allPosts = posts.array();
+  res.json(allPosts);
+});
+
+app.get('/logout', isAuthenticated, (req, res) => {
   console.log('Loggin out...');
   req.session.destroy((err) => {
     if (err) console.log(`Error destroying session: ${err}`);

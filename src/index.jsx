@@ -5,19 +5,6 @@ import './style.css';
 
 import App from './App.jsx';
 
-import userStore from './store/userStore';
-const { me, setUser } = userStore.getState();
-me().then((user) => {
-  // console.log('USER HERE, USER HAS CHANGED');
-  // console.log(user);
-  if (user?.isLoaded) {
-    setUser(user);
-  } else {
-    // logout();
-    // history.push('/');
-  }
-});
-
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>

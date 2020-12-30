@@ -21,7 +21,7 @@ const postStore = create(
         },
         body: JSON.stringify(data),
       }).then(handleResponse);
-      console.log(res);
+      return res;
     },
   })),
 );

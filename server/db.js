@@ -2,6 +2,7 @@ const Enmap = require('enmap');
 const argon2 = require('argon2');
 
 const users = new Enmap('users');
+const posts = new Enmap('posts');
 
 users.defer.then(async () => {
   users.set('admin', {
@@ -11,6 +12,19 @@ users.defer.then(async () => {
     userType: 'admin',
     firstName: 'Admin',
     lastName: 'Istrator',
+  });
+});
+
+posts.defer.then(async () => {
+  posts.set('1', {
+    id: 1,
+    title: 'Test Post',
+    content:
+      "Lorem ipsum blah blah we're all tired of seeing that fake latin shit.",
+    author: 'admin',
+    created: Date.now(),
+    published: true,
+    comments: [],
   });
 });
 
@@ -36,6 +50,20 @@ const newUser = async (data) => {
     password: hash,
   });
 };
+
+const newPost = async (data) => {
+  const id = posts.autonum;
+  posts.set(id, {
+    ...data,
+    id,
+    created: Date.now(),
+  });
+  return {
+    ok: 'ok',
+    id,
+  };
+};
+
 // https://stackoverflow.com/questions/948172/password-strength-meter
 function scorePassword(pass) {
   let score = 0;
@@ -69,6 +97,8 @@ function scorePassword(pass) {
 
 module.exports = {
   users,
+  posts,
+  newPost,
   newUser,
   login,
 };

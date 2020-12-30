@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import Jumbotron from '../components/Jumbotron.js';
 import postStore from '../store/postStore';
-const test = 4;
 
 const SinglePost = (props) => {
-  const { author, date, title, content } = props;
+  const { author, date, title, content, id } = props;
   return (
-    <div className="py-8 flex border-t-2 border-gray-800 flex-wrap md:flex-no-wrap">
+    <div className="py-8 flex flex-wrap md:flex-no-wrap">
       <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
         <span className="tracking-widest font-medium title-font text-white">
           {author}
@@ -20,7 +20,7 @@ const SinglePost = (props) => {
         </h2>
         <p className="leading-relaxed">{content}</p>
         <a className="text-purple-500 inline-flex items-center mt-4">
-          Learn More
+          <Link to={`post/${id}`}>Read Post</Link>
           <svg
             className="w-4 h-4 ml-2"
             viewBox="0 0 24 24"
@@ -40,8 +40,11 @@ const SinglePost = (props) => {
 };
 
 const Home = () => {
-  const posts = postStore((state) => state.posts);
-
+  const { posts, getPosts } = postStore();
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
+  console.log(posts);
   return (
     <>
       <Jumbotron title="Latest Posts" subtext="Ehhhh What's Up, Doc?" />

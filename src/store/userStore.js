@@ -4,9 +4,7 @@ import { BASE_URL, handleResponse } from './tools';
 
 const userStore = create(
   devtools((set) => ({
-    userData: {
-      loaded: false,
-    },
+    userData: {},
 
     login: async ({ username, password }) => {
       const res = await fetch(`${BASE_URL}/login`, {
@@ -19,8 +17,7 @@ const userStore = create(
 
       if (res) {
         const userData = await fetch(`${BASE_URL}/me`).then(handleResponse);
-        console.log(userData);
-        set({ userData, loaded: true });
+        set({ userData });
       }
     },
 
@@ -28,14 +25,7 @@ const userStore = create(
       const res = await fetch(`${BASE_URL}/logout`).then(handleResponse);
       console.log(res);
 
-      set({
-        userData: {
-          authenticated: false,
-          username: null,
-          isAdmin: false,
-          loaded: true,
-        },
-      });
+      set({ userData: {} });
     },
 
     setUser: (userData) => set({ userData }),
@@ -43,8 +33,8 @@ const userStore = create(
     me: async () => {
       const userData = await fetch(`${BASE_URL}/me`).then(handleResponse);
       if (userData) {
-        console.log(userData);
-        set({ userData, loaded: true });
+        set({ userData });
+        return userData;
       }
     },
   })),
