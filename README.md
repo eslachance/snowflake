@@ -32,7 +32,7 @@ The `better-sqlite3` module, as with all sqlite modules in nodejs, requires the 
 
 > For **Linux** (Debian-Based), run `sudo apt install build-essential` and make sure you have python install, which should already be the case. If it's not, well, you're a linux user, you know how to figure that one out, right? Then once that's done, open the project folder for the next step.
 
-> For **Mac** (strangely, the most annoying in this endeavour), you need to install XCode from the App Store, then go to _Preferences_, _Downloads_, and install the _Command Line Tools_. Then close XCode forever (but don't uninstall it). Goodbye pointless gigs of space! (if you have a better way, _please_ let me know).
+> For **Mac** open `Terminal` (located in `~/Applications/Utilities/Terminal.app`) and run the command `sudo xcode-select --install`. You will be prompted for your login password, enter it and then go through the steps in the popup to install the Command Line Developer Tools.
 
 ### The Installation
 
