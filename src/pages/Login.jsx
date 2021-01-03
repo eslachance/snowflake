@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react'; // , { useState }
 import { Field, Form, Formik } from 'formik';
 
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'; // , Redirect
 
 import userStore from '../store/userStore';
 
 import Jumbotron from '../components/Jumbotron.js';
 
 const LoginPage = () => {
-  const user = userStore((state) => state.userData);
+  // const user = userStore((state) => state.userData);
   const login = userStore((state) => state.login);
   const history = useHistory();
 
@@ -105,7 +105,7 @@ const LoginPage = () => {
             )}
           </Formik>
           <p className="text-xs text-gray-600 mt-3">
-            I mean, you probably don't belong here.
+            I mean, you probably don&apos;t belong here.
           </p>
         </div>
       </div>

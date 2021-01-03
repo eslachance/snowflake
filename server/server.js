@@ -3,19 +3,36 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-const { users, login, newUser, posts, newPost } = require('./db.js');
 const Enmap = require('enmap');
 
-// const convertEntriesToObject = (entries) => {
-//   const obj = {};
-//   for (let [key, value] of entries) {
-//     console.log(key + ' = ' + value);
-//     obj[key] = value;
-//     if(!obj[key].id) obj[key].id = key;
-//   }
-//   return obj;
-// };
+const argon2 = require('argon2');
 
+const users = new Enmap('users');
+const posts = new Enmap('posts');
+
+users.defer.then(async () => {
+  users.ensure('admin', {
+    username: 'admin',
+    password: await argon2.hash('password'),
+    created: Date.now(),
+    edited: Date.now(),
+    userType: 'admin',
+    displayName: 'Administrator',
+  });
+});
+
+posts.defer.then(async () => {
+  posts.ensure('1', {
+    id: 1,
+    title: 'Test Post',
+    contents:
+      "Lorem ipsum blah blah we're all tired of seeing that fake latin shit.",
+    author: 'admin',
+    created: Date.now(),
+    published: true,
+    comments: [],
+  });
+});
 const app = express();
 app.use(express.json());
 app.use(
@@ -67,14 +84,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/users', isAdmin, (req, res) => {
-  const residenceid = req.query.residence;
   let userData = new Enmap(users.entries());
-
-  // console.log('user filtering: ', residenceid);
-
-  if (residenceid) {
-    userData = userData.filter((user) => user.residence === residenceid);
-  }
   // still contains password, should be filtered out (duh)
   res.json(userData.array().map((u) => ({ ...u, id: u.username })));
 });
@@ -101,7 +111,7 @@ app.post('/users', isAdmin, (req, res) => {
 });
 
 // eslint-disable-next-line no-unused-vars
-app.patch('/users', isAdmin, (req, res) => {
+app.patch('/users/:id', isAdmin, (req, res) => {
   // add udpate code
 });
 
@@ -113,7 +123,7 @@ app.post('/login', async (req, res) => {
     req.session.logged = true;
     req.session.username = req.body.username;
     req.session.userType = user.userType;
-    req.session.name = `${user.firstName} ${user.lastName}`;
+    req.session.displayName = user.displayName;
     req.session.save();
     console.log('SESSION SAVED: ', req.session, user);
     res.json({
@@ -142,27 +152,32 @@ app.get('/me', async (req, res) => {
   res.json({
     authenticated: true,
     username: session.username,
+    displayName: session.displayName,
     isAdmin: session.userType === 'admin',
   });
 });
 
-app.post('/post', isAuthenticated, (req, res) => {
+app.post('/post', isAuthenticated, async (req, res) => {
   console.log('Creating new blog post...', req.body);
-  if (!req?.body?.content || !req?.body?.title) {
+  if (!req?.body?.contents || !req?.body?.title) {
     return res.status(400).json({
       error: true,
       message: 'Missing post data',
     });
   }
-  const result = newPost(req.body);
+  const result = await newPost(req.body);
 
   res.json(result);
 });
 
+app.get('/post/:id', (req, res) => {
+  const { id } = req.params;
+  res.json(posts.get(id));
+});
+
 app.get('/posts', (req, res) => {
   console.log('Getting all blog posts');
-  const allPosts = posts.array();
-  res.json(allPosts);
+  res.json(convertEntriesToObject(posts.entries()));
 });
 
 app.get('/logout', isAuthenticated, (req, res) => {
@@ -183,3 +198,79 @@ app.listen(process.env.PORT || 3000, () => {
     `Example app listening at http://localhost:${process.env.PORT || 3000}`,
   );
 });
+
+// Utilities
+
+const login = async (username, password) => {
+  const user = users.get(username);
+  if (!user || !password) return false;
+  return argon2.verify(user.password, password);
+};
+
+const newUser = async (data) => {
+  if (users.has(data.username))
+    throw new Error(`User ${data.username} already exists!`);
+  const score = scorePassword(data.plainpw);
+  if (score < 30)
+    throw new Error('Your password is too weak, and cannot be used.');
+  const hash = await argon2.hash(data.plainpw);
+  delete data.plainpw;
+  users.set(data.username, {
+    ...data,
+    created: Date.now(),
+    password: hash,
+  });
+};
+
+const newPost = async (data) => {
+  const id = posts.autonum;
+  posts.set(id, {
+    ...data,
+    id,
+    created: Date.now(),
+  });
+  return {
+    ok: 'ok',
+    id,
+  };
+};
+
+const convertEntriesToObject = (entries) => {
+  const obj = {};
+  for (let [key, value] of entries) {
+    obj[key] = value;
+    if (!obj[key].id) obj[key].id = key;
+  }
+  return obj;
+};
+
+// https://stackoverflow.com/questions/948172/password-strength-meter
+function scorePassword(pass) {
+  let score = 0;
+  if (!pass) {
+    return score;
+  }
+
+  // award every unique letter until 5 repetitions
+  const letters = {};
+  for (let i = 0; i < pass.length; i++) {
+    letters[pass[i]] = (letters[pass[i]] || 0) + 1;
+    score += 5.0 / letters[pass[i]];
+  }
+
+  // bonus points for mixing it up
+  const variations = {
+    digits: /\d/.test(pass),
+    lower: /[a-z]/.test(pass),
+    upper: /[A-Z]/.test(pass),
+    nonWords: /\W/.test(pass),
+  };
+
+  let variationCount = 0;
+  for (const check in variations) {
+    variationCount += variations[check] == true ? 1 : 0;
+  }
+  score += (variationCount - 1) * 10;
+
+  return parseInt(score);
+}

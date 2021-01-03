@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, Form, Formik } from 'formik';
 
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import userStore from '../store/userStore';
 import postStore from '../store/postStore';
@@ -11,7 +11,7 @@ import Jumbotron from '../components/Jumbotron.js';
 const NewPostPage = () => {
   const user = userStore((state) => state.userData);
   const { newPost } = postStore();
-  const history = useHistory();
+  // const history = useHistory();
 
   if (!user?.isAdmin) {
     return <Redirect to="/" />;
@@ -22,7 +22,7 @@ const NewPostPage = () => {
       .then((postData) => {
         if (postData?.id) {
           alert(`Post ${postData.id} posted.`);
-          // history.push(`/post/${postData.id}`);
+          history.push(`/post/${postData.id}`);
         } else {
           console.log(postData, postData.err);
         }
@@ -49,7 +49,7 @@ const NewPostPage = () => {
                 <div className="p-2 w-full">
                   <div className="relative">
                     <Field type="text" name="title" placeholder="Post Title">
-                      {({ field, form }) => (
+                      {({ field }) => (
                         <label
                           htmlFor="title"
                           className="leading-7 text-sm text-gray-400"
@@ -74,7 +74,7 @@ const NewPostPage = () => {
                       name="contents"
                       placeholder="Write Your Content Here"
                     >
-                      {({ field, form }) => (
+                      {({ field }) => (
                         <label
                           htmlFor="contents"
                           className="leading-7 text-sm text-gray-400"
